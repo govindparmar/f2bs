@@ -14,13 +14,10 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 			retVal.fHexSyntax = retVal.fHexSyntax || (towupper(pArgv[i][1]) == L'X');
 			retVal.fCommaSep = retVal.fCommaSep || (towupper(pArgv[i][1]) == L'C');
 		}
-		else
+		else if (L'\0' == retVal.wszFileName[0])
 		{
-			if (retVal.wszFileName[0] == L'\0')
-			{
-				StringCchCopyW(retVal.wszFileName, MAX_PATH, pArgv[i]);
-			}
-		}
+			StringCchCopyW(retVal.wszFileName, MAX_PATH, pArgv[i]);
+		}	
 	}
 
 	return retVal;
