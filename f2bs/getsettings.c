@@ -16,7 +16,10 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 		}
 		else
 		{
-			StringCchCopyW(retVal.wszFileName, MAX_PATH, pArgv[i]);
+			if (retVal.wszFileName[0] == L'\0')
+			{
+				StringCchCopyW(retVal.wszFileName, MAX_PATH, pArgv[i]);
+			}
 		}
 	}
 
