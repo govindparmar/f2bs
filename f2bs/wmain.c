@@ -7,7 +7,8 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 	BYTE *bBuffer = NULL;
 	HANDLE hFile = INVALID_HANDLE_VALUE;
 	SETTINGS settings;
-	DWORD i = 0, dwError, dwRead = ULONG_MAX;
+	DWORD i = 0, dwError, dwRead = ULONG_MAX, dwToRead;
+	HRESULT hr;
 	SIZE_T cbAlloc;
 
 	if (nArgc < 2)
@@ -17,7 +18,9 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 	}
 
 	settings = GetSettings(nArgc, pArgv);
-	//wprintf_s(L"Read settings:\n\tHex syntax: %s\n\tComma separated: %s\n\tFile name: %s\n\n", BOOLTOSTRING(settings.fHexSyntax), BOOLTOSTRING(settings.fCommaSep), settings.wszFileName);
+#ifdef _DEBUG
+	wprintf_s(L"Read settings:\n\tHex syntax: %s\n\tComma separated: %s\n\tFile name: %s\n\n", BOOLTOSTRING(settings.fHexSyntax), BOOLTOSTRING(settings.fCommaSep), settings.wszFileName);
+#endif
 	hFile = CreateFileW(settings.wszFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
@@ -38,7 +41,9 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 
 	while (liSize.QuadPart)
 	{
-		if (ReadFile(hFile, bBuffer, cbAlloc, &dwRead, NULL))
+		hr = ULongPtrToDWord(cbAlloc, &dwToRead);
+		assert(SUCCEEDED(hr));
+		if (ReadFile(hFile, bBuffer, dwToRead, &dwRead, NULL))
 		{
 			for (i = 0; i < dwRead; i++)
 			{
@@ -68,6 +73,7 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 		}
 
 		liSize.QuadPart -= dwRead;
+		cbAlloc = min(65536, (SIZE_T)liSize.QuadPart);
 	}
 
 cleanup:

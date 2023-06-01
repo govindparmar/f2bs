@@ -1,9 +1,13 @@
 #pragma once
 #include <Windows.h>
+#include <intsafe.h>
+#include <assert.h>
 #include <strsafe.h>
 #include <sal.h>
 
+#ifdef _DEBUG
 #define BOOLTOSTRING(b) ((b) ? L"True" : L"False")
+#endif
 #define WMain wmain
 
 typedef struct _SETTINGS

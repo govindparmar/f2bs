@@ -7,7 +7,7 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 
 	ZeroMemory(&retVal, sizeof(SETTINGS));
 
-	for (i = 0; i < nArgc; i++)
+	for (i = 1; i < nArgc; i++)
 	{
 		if (L'-' == pArgv[i][0] || L'/' == pArgv[i][0] && wcslen(pArgv[i]) >= 2U)
 		{
