@@ -75,7 +75,7 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 		}
 
 		liSize.QuadPart -= dwRead;
-		cbAlloc = min(65536, (SIZE_T)liSize.QuadPart);
+		cbAlloc = min(ALLOC_MAX, (SIZE_T)liSize.QuadPart);
 	}
 
 cleanup:
