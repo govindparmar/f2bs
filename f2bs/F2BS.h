@@ -15,7 +15,7 @@ typedef struct _SETTINGS
 {
 	BOOL fHexSyntax;
 	BOOL fCommaSep;
-	INT8 nSpaces;
+	UINT8 nSpaces;
 	WCHAR wszFileName[MAX_PATH];
 } SETTINGS, *PSETTINGS;
 
