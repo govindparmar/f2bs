@@ -23,7 +23,7 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 				hr = LongToInt8(lSpaces, &nSpaces);
 				if (SUCCEEDED(hr))
 				{
-					retVal.nSpaces = max(retVal.nSpaces, nSpaces);
+					retVal.nSpaces = nSpaces;
 				}
 			}
 		}
