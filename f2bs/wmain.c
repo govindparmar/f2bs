@@ -57,7 +57,7 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 					wprintf_s(L",");
 				}
 				//else
-				for(i2 = 0; i2 < settings.nSpaces; i2++)
+				for(i2 = 0; i2 < settings.uSpaces; i2++)
 				{
 					wprintf_s(L" ");
 				}

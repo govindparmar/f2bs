@@ -4,8 +4,8 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 {
 	SETTINGS retVal;
 	INT i;
-	ULONG lSpaces;
-	UINT8 nSpaces;
+	ULONG ulSpaces;
+	UINT8 uSpaces;
 	HRESULT hr;
 
 	ZeroMemory(&retVal, sizeof(SETTINGS));
@@ -19,11 +19,11 @@ SETTINGS WINAPI GetSettings(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 			if (1 == retVal.nSpaces && towupper(pArgv[i][1]) == L'S')
 			{
 				INT nOff = 2 + (L':' == pArgv[i][2]);
-				lSpaces = wcstoul(&pArgv[i][nOff], NULL, 10);
-				hr = ULongToUInt8(lSpaces, &nSpaces);
+				ulSpaces = wcstoul(&pArgv[i][nOff], NULL, 10);
+				hr = ULongToUInt8(ulSpaces, &uSpaces);
 				if (SUCCEEDED(hr))
 				{
-					retVal.nSpaces = nSpaces;
+					retVal.nSpaces = uSpaces;
 				}
 			}
 		}
