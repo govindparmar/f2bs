@@ -7,19 +7,19 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 	BYTE *bBuffer = NULL;
 	HANDLE hFile = INVALID_HANDLE_VALUE;
 	SETTINGS settings;
-	DWORD i = 0, dwError, dwRead = ULONG_MAX, dwToRead;
+	DWORD i = 0, i2, dwError, dwRead = ULONG_MAX, dwToRead;
 	HRESULT hr;
 	SIZE_T cbAlloc;
 
 	if (nArgc < 2)
 	{
-		_putws(L"Usage: F2BS [/x] [/c] inputfile\n\t/x\tUse 0x notation\n\t/c\tSeparate bytes with commas");
+		_putws(L"Usage: F2BS [/x] [/c] [/s:N] inputfile\n\t/x\tUse 0x notation\n\t/c\tSeparate bytes with commas\n\t/s:N\tSeperate printed bytes with N spaces (default 1)\n");
 		return 0;
 	}
 
 	settings = GetSettings(nArgc, pArgv);
 #ifdef _DEBUG
-	wprintf_s(L"Read settings:\n\tHex syntax: %s\n\tComma separated: %s\n\tFile name: %s\n\n", BOOLTOSTRING(settings.fHexSyntax), BOOLTOSTRING(settings.fCommaSep), settings.wszFileName);
+	wprintf_s(L"Read settings:\n\tHex syntax: %s\n\tComma separated: %s\n\tNumber of spaces between bytes: %hhd\n\tFile name: %s\n\n", BOOLTOSTRING(settings.fHexSyntax), BOOLTOSTRING(settings.fCommaSep), settings.nSpaces, settings.wszFileName);
 #endif
 	hFile = CreateFileW(settings.wszFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
@@ -30,7 +30,7 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 	}
 
 	GetFileSizeEx(hFile, &liSize);
-	cbAlloc = min(65536, (SIZE_T)liSize.QuadPart);
+	cbAlloc = min(ALLOC_MAX, (SIZE_T)liSize.QuadPart);
 	bBuffer = (BYTE *)HeapAlloc(hHeap, HEAP_ZERO_MEMORY, cbAlloc);
 	if (NULL == bBuffer)
 	{
@@ -56,7 +56,8 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 				{
 					wprintf_s(L",");
 				}
-				else
+				//else
+				for(i2 = 0; i2 < settings.nSpaces; i2++)
 				{
 					wprintf_s(L" ");
 				}
@@ -65,11 +66,12 @@ INT WINAPIV WMain(_In_ INT nArgc, _In_reads_(nArgc) WCHAR *pArgv[])
 		else
 		{
 			dwError = GetLastError();
-			if (dwError != ERROR_IO_PENDING)// Impossible with synchronous IO but for future 
-			{
+			/* Impossible with synchronous IO but for future 
+			if (dwError != ERROR_IO_PENDING)
+			{*/
 				fwprintf_s(stderr, L"Error reading file: %I32u\n", dwError);
 				goto cleanup;
-			}
+			//}
 		}
 
 		liSize.QuadPart -= dwRead;

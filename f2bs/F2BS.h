@@ -9,11 +9,13 @@
 #define BOOLTOSTRING(b) ((b) ? L"True" : L"False")
 #endif
 #define WMain wmain
+#define ALLOC_MAX 65536
 
 typedef struct _SETTINGS
 {
 	BOOL fHexSyntax;
 	BOOL fCommaSep;
+	INT8 nSpaces;
 	WCHAR wszFileName[MAX_PATH];
 } SETTINGS, *PSETTINGS;
 
